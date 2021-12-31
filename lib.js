@@ -3,7 +3,7 @@
  * @param connection
  * @param accountId
  * @param amount
- * @returns {Promise<boolean>}
+ * @returns {Promise<{isError: boolean, err}>}
  */
 async function deposit(connection, accountId, amount) {
     await connection.execute('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');
@@ -13,15 +13,15 @@ async function deposit(connection, accountId, amount) {
         await connection.execute('SELECT id, name FROM accounts WHERE id = ? FOR UPDATE', [accountId]);
         console.log(`Locked rows for accounts: ${accountId}`);
         const [account,] = await connection.execute('SELECT name, balance from accounts WHERE id = ?', [accountId]);
-        await connection.execute('UPDATE accounts SET balance=balance+? WHERE id = ?', [amount, accountId]);
+        const result = await connection.execute('UPDATE accounts SET balance=balance+? WHERE id = ?', [amount, accountId]);
         console.log(`Account balance updated`);
         await connection.commit();
-        return true;
+        return result;
     } catch (err) {
         console.error(`Error occurred while withdrawing: ${err.message}`, err);
         connection.rollback();
         console.info('Rollback successful');
-        return false;
+        return {isError: true, err};
     }
 }
 
@@ -38,7 +38,7 @@ async function getAccount(connection, accountId) {
     } catch (err) {
         console.error(`Error occurred while transferring: ${err.message}`, err);
         console.info('Rollback successful');
-        return null;
+        return err;
     }
 }
 
@@ -47,7 +47,7 @@ async function getAccount(connection, accountId) {
  * @param connection
  * @param accountId
  * @param amount
- * @returns {Promise<boolean>}
+ * @returns {Promise<{isError: boolean, err}>}
  */
 async function withdraw(connection, accountId, amount) {
     await connection.execute('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');
@@ -60,15 +60,15 @@ async function withdraw(connection, accountId, amount) {
         if (account.balance < amount) {
             throw new Error(`Account ${accountId} doesn't have enough funding`);
         }
-        await connection.execute('UPDATE accounts SET balance=balance-? WHERE id = ?', [amount, accountId]);
+        const result = await connection.execute('UPDATE accounts SET balance=balance-? WHERE id = ?', [amount, accountId]);
         console.log(`Account balance updated`);
         await connection.commit();
-        return true;
+        return result;
     } catch (err) {
         console.error(`Error occurred while withdrawing: ${err.message}`, err);
         connection.rollback();
         console.info('Rollback successful');
-        return false;
+        return {isError: true, err};
     }
 }
 
@@ -78,7 +78,7 @@ async function withdraw(connection, accountId, amount) {
  * @param sourceAccountId
  * @param destAccountId
  * @param amount
- * @returns {Promise<void>}
+ * @returns {Promise<{sourceAccountUpdate: *, destAccountUpdate: *}>}
  * @private
  */
 async function _transferBalance(connection, sourceAccountId, destAccountId, amount) {
@@ -93,10 +93,14 @@ async function _transferBalance(connection, sourceAccountId, destAccountId, amou
     if (!destAccount) {
         throw new Error(`Destination account ${destAccountId} error`);
     }
-    await connection.execute('UPDATE accounts SET balance=balance-? WHERE id = ?', [amount, sourceAccountId]);
+    const sourceAccountUpdate = await connection.execute('UPDATE accounts SET balance=balance-? WHERE id = ?', [amount, sourceAccountId]);
     console.log(`Source account balance updated`);
-    await connection.execute(`UPDATE accounts SET balance=balance+? WHERE id = ?`, [amount, destAccountId]);
+    const destAccountUpdate = await connection.execute(`UPDATE accounts SET balance=balance+? WHERE id = ?`, [amount, destAccountId]);
     console.log(`Target account balance updated`);
+    return {
+        sourceAccountUpdate,
+        destAccountUpdate
+    }
 }
 
 /**
@@ -105,7 +109,7 @@ async function _transferBalance(connection, sourceAccountId, destAccountId, amou
  * @param sourceAccountId
  * @param destAccountId
  * @param amount
- * @returns {Promise<boolean>}
+ * @returns {Promise<void>}
  */
 async function transferBalance(connection, sourceAccountId, destAccountId, amount) {
     await connection.execute('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');
@@ -113,14 +117,14 @@ async function transferBalance(connection, sourceAccountId, destAccountId, amoun
     //set wait timeout and lock wait timeout as per need.
     await connection.beginTransaction();
     try {
-        await _transferBalance(connection, sourceAccountId, destAccountId, amount);
+        const result = await _transferBalance(connection, sourceAccountId, destAccountId, amount);
         await connection.commit();
-        return true;
+        return result;
     } catch (err) {
         console.error(`Error occurred while transferring: ${err.message}`, err);
         connection.rollback();
         console.info('Rollback successful');
-        return false;
+        return {isError: true, err};
     }
 }
 
@@ -136,12 +140,13 @@ async function createAccount(connection, name) {
         return result;
     } catch (err) {
         console.error(`Error occurred while creating account: ${err.message}`, err);
+        return {isError: true, err};
     }
 
 }
 
 /**
- * Create an invoice, with receip
+ * Create an invoice, with recipient
  * @param connection
  * @param recipientAccountId
  * @param amount
@@ -153,6 +158,7 @@ async function createInvoice(connection, recipientAccountId, amount) {
         return result;
     } catch (err) {
         console.error(`Error occurred while creating account: ${err.message}`, err);
+        return {isError: true, err};
     }
 }
 
@@ -173,15 +179,15 @@ async function payInvoice(connection, invoiceId, payerAccountId) {
 
         await _transferBalance(connection, sourceAccountId, destAccountId, amount);
 
-        await connection.execute('UPDATE invoices SET paid_at=?, payer_account_id=? WHERE id = ?', [new Date(), payerAccountId, invoiceId]);
+        const result = await connection.execute('UPDATE invoices SET paid_at=?, payer_account_id=? WHERE id = ?', [new Date(), payerAccountId, invoiceId]);
         console.log(`Invoice updated`);
         await connection.commit();
-        return true;
+        return result;
     } catch (err) {
         console.error(`Error occurred while transferring: ${err.message}`, err);
         connection.rollback();
         console.info('Rollback successful');
-        return false;
+        return {isError: true, err};
     }
 }
 
@@ -192,7 +198,7 @@ async function getInvoice(connection, invoiceId) {
     } catch (err) {
         console.error(`Error occurred while transferring: ${err.message}`, err);
         console.info('Rollback successful');
-        return null;
+        return {isError: true, err};
     }
 }
 

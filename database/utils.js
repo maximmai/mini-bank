@@ -15,6 +15,31 @@ async function createDBConnection(){
     return connection;
 }
 
+
+function isError(obj) {
+    return obj.isError;
+}
+
+function wrapResponse(result) {
+    let success = true;
+    let message = "OK";
+    let data = result
+
+    if (isError(result)) {
+        success = false;
+        message = result.err.message;
+        data = null;
+    }
+    const response = {
+        message,
+        success,
+        data
+    }
+
+    return response;
+}
+
 module.exports = {
-    createDBConnection
+    createDBConnection,
+    wrapResponse
 }
