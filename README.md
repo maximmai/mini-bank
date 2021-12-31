@@ -74,14 +74,15 @@ Mini-bank returns the following status codes in its API:
 | 500 | `INTERNAL SERVER ERROR` |
 
 
-### Account
-#### Create an account 
+## Account
+### Create an account 
 ```http
 POST /api/account
 ```
-Query: N/A
+#### Query
+N/A
 
-Payload
+#### Payload
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `name` | `string` | **Required**. The name of the holder of the account |
@@ -92,26 +93,26 @@ Payload
 }
 ```
 
-#### Retrieve an account
+### Retrieve an account
 ```http
 GET /api/account/:id
 ```
-Query:
+#### Query:
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `id`  | `string`  | **Required**. The unique id of the account |
 
 
-#### Make a deposit
+### Make a deposit
 ```http
 POST /api/account/:id/deposit
 ```
-Query: 
+#### Query
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `id`  | `string`  | **Required**. The unique id of the account |
 
-Payload
+#### Payload
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `amount` | `integer` | **Required**. The amount to deposit |
@@ -122,16 +123,16 @@ Payload
 }
 ```
 
-#### Withdraw from an account
+### Withdraw from an account
 ```http
 POST /api/account/:id/withdraw
 ```
-Query: 
+#### Query
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `id`  | `string`  | **Required**. The unique id of the account |
 
-Payload
+#### Payload
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `amount` | `integer` | **Required**. The amount to withdraw |
@@ -142,13 +143,14 @@ Payload
 }
 ```
 
-#### Make a transfer to another account
+### Make a transfer to another account
 ```http
 POST /api/account/transfer
 ```
-Query: N/A
+#### Query
+N/A
 
-Payload
+#### Payload
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `sourceAccountId` | `string` | **Required**. The account id of the source account |
@@ -163,14 +165,15 @@ Payload
 }
 ```
 
-### Invoice
-#### Create an invoice
+## Invoice
+### Create an invoice
 ```http
 POST /api/invoice/create
 ```
-Query: N/A
+#### Query
+N/A
 
-Payload
+#### Payload
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `recipientAccountId` | `string` | **Required**. The id of the recipient's account |
@@ -184,17 +187,17 @@ Payload
 ```
 
 
-#### Make a payment to an invoice
+### Make a payment to an invoice
 `app.post('/invoice/:id/pay');`
 ```http
 POST /api/invoice/:id/pay
 ```
-Query: 
+#### Query
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `id`  | `string`  | **Required**. The unique id of the unpaid invoice |
 
-Payload
+#### Payload
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `payerAccountId` | `string` | **Required**. The id of the payer's account |
@@ -205,12 +208,12 @@ Payload
 }
 ```
 
-#### Retrieve an invoice
+### Retrieve an invoice
 ```http
 GET /api/invoice/:id
 ```
 
-Query:
+#### Query
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `id`  | `string`  | **Required**. The unique id of the invoice |
