@@ -5,7 +5,7 @@ const { deposit, getAccount, withdraw, transferBalance, createAccount, createInv
 const { createDBConnection } = require('./database/utils');
 
 const port = 3000;
-
+const API_PREFIX = '/api';
 const app = express();
 app.use(express.json());
 
@@ -67,15 +67,18 @@ const handlerGetInvoice = async (req, res) => {
     res.send(invoice);
 }
 
-app.post('/account/create', handlerCreateAccount);
-app.get('/account/:id', handlerGetAccount);
-app.post('/account/:id/deposit', handlerDeposit);
-app.post('/account/:id/withdraw', handlerWithdraw);
-app.post('/account/transfer', handlerTransfer);
+// Account related
+app.post(`${API_PREFIX}/account/create`, handlerCreateAccount);
+app.get(`${API_PREFIX}/account/:id`, handlerGetAccount);
+app.post(`${API_PREFIX}/account/:id/deposit`, handlerDeposit);
+app.post(`${API_PREFIX}/account/:id/withdraw`, handlerWithdraw);
+app.post(`${API_PREFIX}/account/transfer`, handlerTransfer);
 
-app.post('/invoice/create', handlerCreateInvoice);
-app.post('/invoice/:id/pay', handlerPayInvoice);
-app.get('/invoice/:id', handlerGetInvoice);
+
+// Invoice related
+app.post(`${API_PREFIX}/invoice/create`, handlerCreateInvoice);
+app.post(`${API_PREFIX}/invoice/:id/pay`, handlerPayInvoice);
+app.get(`${API_PREFIX}/invoice/:id`, handlerGetInvoice);
 
 
 app.listen(port, () => {
