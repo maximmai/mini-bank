@@ -11,7 +11,7 @@ There are many reasons to use the Mini-Bank repository. The most common use case
 However, the based application may lack of basic features, feel free to file an issue and submit a PR to enhance the base of mini-bank.
 
 ## Prerequisite
-- MySQL or PostgreSQL
+- MySQL, PostgreSQL or any *\*SQL* compatible databases
 - Node v14+
 
 ## Environment
@@ -86,9 +86,13 @@ Payload
 | :--- | :--- | :--- |
 | `name` | `string` | **Required**. The name of the holder of the account |
 
+```JSON
+{
+    "name": "John Doe"
+}
+```
 
 #### Retrieve an account
-`app.get('/account/:id');`
 ```http
 GET /api/account/:id
 ```
@@ -99,21 +103,115 @@ Query:
 
 
 #### Make a deposit
-`app.post('/account/:id/deposit');`
+```http
+POST /api/account/:id/deposit
+```
+Query: 
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `id`  | `string`  | **Required**. The unique id of the account |
+
+Payload
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `amount` | `integer` | **Required**. The amount to deposit |
+
+```JSON
+{
+    "amount": 2000
+}
+```
 
 #### Withdraw from an account
-`app.post('/account/:id/withdraw');`
+```http
+POST /api/account/:id/withdraw
+```
+Query: 
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `id`  | `string`  | **Required**. The unique id of the account |
+
+Payload
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `amount` | `integer` | **Required**. The amount to withdraw |
+
+```JSON
+{
+    "amount": 500
+}
+```
 
 #### Make a transfer to another account
-`app.post('/account/transfer');`
+```http
+POST /api/account/transfer
+```
+Query: N/A
+
+Payload
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `sourceAccountId` | `string` | **Required**. The account id of the source account |
+| `destAccountId` | `string` | **Required**. The account id of the destination account |
+| `amount` | `integer` | **Required**. The amount to transfer |
+
+```JSON
+{
+    "sourceAccountId": 1,
+    "destAccountId": 2,
+    "amount": 300
+}
+```
 
 ### Invoice
 #### Create an invoice
-`app.post('/invoice/create');`
+```http
+POST /api/invoice/create
+```
+Query: N/A
+
+Payload
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `recipientAccountId` | `string` | **Required**. The id of the recipient's account |
+| `amount` | `integer` | **Required**. The amount due |
+
+```JSON
+{
+    "recipientAccountId": 1,
+    "amount": 50
+}
+```
+
 
 #### Make a payment to an invoice
 `app.post('/invoice/:id/pay');`
+```http
+POST /api/invoice/:id/pay
+```
+Query: 
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `id`  | `string`  | **Required**. The unique id of the unpaid invoice |
+
+Payload
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `payerAccountId` | `string` | **Required**. The id of the payer's account |
+
+```JSON
+{
+    "payerAccountId": 2
+}
+```
 
 #### Retrieve an invoice
-`app.get('/invoice/:id');`
+```http
+GET /api/invoice/:id
+```
+
+Query:
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `id`  | `string`  | **Required**. The unique id of the invoice |
 
