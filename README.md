@@ -10,6 +10,26 @@ There are many reasons to use the Mini-Bank repository. The most common use case
 
 However, the based application may lack of basic features, feel free to file an issue and submit a PR to enhance the base of mini-bank.
 
+## Prerequisite
+- MySQL or PostgreSQL
+- Node v14+
+
+## Environment
+Create a `.env` file that contains the database connection information:
+
+```bash
+USERDB='mini_bank'
+PASSWORD='password'
+HOST='localhost'
+DATABASE='mini_bank'
+```
+
+## Building and running the application
+```bash
+npm install
+npm start
+```
+
 ## Requests
 
 ### Example 
