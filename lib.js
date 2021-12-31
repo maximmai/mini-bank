@@ -56,9 +56,9 @@ async function withdraw(connection, accountId, amount) {
     try {
         await connection.execute('SELECT id, name FROM accounts WHERE id = ? FOR UPDATE', [accountId]);
         console.log(`Locked rows for accounts: ${accountId}`);
-        const [account,] = await connection.execute('SELECT name, balance from accounts WHERE id = ?', [accountId]);
+        const [[account,],] = await connection.execute('SELECT name, balance from accounts WHERE id = ?', [accountId]);
         if (account.balance < amount) {
-            throw new Error(`Account ${accountId} doesn't have enough funding`);
+            throw new Error(`Account ${accountId} doesn't have enough fund`);
         }
         const result = await connection.execute('UPDATE accounts SET balance=balance-? WHERE id = ?', [amount, accountId]);
         console.log(`Account balance updated`);
@@ -87,7 +87,7 @@ async function _transferBalance(connection, sourceAccountId, destAccountId, amou
     console.log(`Locked rows for accounts: ${sourceAccountId}, ${destAccountId}`);
     const [[sourceAccount,],] = await connection.execute('SELECT name, balance from accounts WHERE id = ?', [sourceAccountId]);
     if (sourceAccount.balance < amount) {
-        throw new Error(`Source account ${sourceAccountId} doesn't have enough funding`);
+        throw new Error(`Source account ${sourceAccountId} doesn't have enough fund`);
     }
     const [[destAccount,],] = await connection.execute('SELECT name, balance from accounts WHERE id = ?', [destAccountId]);
     if (!destAccount) {
