@@ -109,7 +109,7 @@ async function _transferBalance(connection, sourceAccountId, destAccountId, amou
  * @param sourceAccountId
  * @param destAccountId
  * @param amount
- * @returns {Promise<void>}
+ * @returns {Promise<{sourceAccountUpdate: *, destAccountUpdate: *}>}
  */
 async function transferBalance(connection, sourceAccountId, destAccountId, amount) {
     await connection.execute('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');
@@ -136,7 +136,7 @@ async function transferBalance(connection, sourceAccountId, destAccountId, amoun
  */
 async function createAccount(connection, name) {
     try {
-        const result = await connection.execute(`INSERT INTO accounts (name) VALUES (?)`, [name]);
+        const [result, ] = await connection.execute(`INSERT INTO accounts (name) VALUES (?)`, [name]);
         return result;
     } catch (err) {
         console.error(`Error occurred while creating account: ${err.message}`, err);
@@ -154,7 +154,7 @@ async function createAccount(connection, name) {
  */
 async function createInvoice(connection, recipientAccountId, amount) {
     try {
-        const result = await connection.execute(`INSERT INTO invoices (recipient_account_id, amount) VALUES (?, ?)`, [recipientAccountId, amount]);
+        const [result, ] = await connection.execute(`INSERT INTO invoices (recipient_account_id, amount) VALUES (?, ?)`, [recipientAccountId, amount]);
         return result;
     } catch (err) {
         console.error(`Error occurred while creating account: ${err.message}`, err);

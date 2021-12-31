@@ -52,9 +52,9 @@ const handlerTransfer = async (req, res) => {
 }
 
 const handlerCreateInvoice = async (req, res) => {
-    const { receiverAccountId, amount } = req.body;
+    const { recipientAccountId, amount } = req.body;
     const connection = await createDBConnection();
-    const result = await createInvoice(connection, receiverAccountId, amount);
+    const result = await createInvoice(connection, recipientAccountId, amount);
     const response = wrapResponse(result);
     res.send(response);
 }
