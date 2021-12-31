@@ -97,7 +97,7 @@ N/A
 ```http
 GET /api/account/:id
 ```
-#### Query:
+#### Query
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `id`  | `string`  | **Required**. The unique id of the account |
