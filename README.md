@@ -54,7 +54,7 @@ Many API endpoints return the JSON representation of the resources created or ed
 {
   "message" : string,
   "success" : bool,
-  "data"    : string
+  "data"    : JSON
 }
 ```
 
@@ -62,7 +62,7 @@ The `message` attribute contains a message commonly used to indicate errors or, 
 
 The `success` attribute describes if the transaction was successful or not.
 
-The `data` attribute contains any other metadata associated with the response. This will be an escaped string containing JSON data.
+The `data` attribute contains any other metadata associated with the response. This will be an JSON data.
 
 ## Status Codes
 
