@@ -53,3 +53,47 @@ Mini-bank returns the following status codes in its API:
 | 404 | `NOT FOUND` |
 | 500 | `INTERNAL SERVER ERROR` |
 
+
+### Account
+#### Create an account 
+```http
+POST /api/account
+```
+Query: N/A
+
+Payload
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `name` | `string` | **Required**. The name of the holder of the account |
+
+
+#### Retrieve an account
+`app.get('/account/:id');`
+```http
+GET /api/account/:id
+```
+Query:
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `id`  | `string`  | **Required**. The unique id of the account |
+
+
+#### Make a deposit
+`app.post('/account/:id/deposit');`
+
+#### Withdraw from an account
+`app.post('/account/:id/withdraw');`
+
+#### Make a transfer to another account
+`app.post('/account/transfer');`
+
+### Invoice
+#### Create an invoice
+`app.post('/invoice/create');`
+
+#### Make a payment to an invoice
+`app.post('/invoice/:id/pay');`
+
+#### Retrieve an invoice
+`app.get('/invoice/:id');`
+
