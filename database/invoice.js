@@ -17,7 +17,8 @@ const sql = `
 const schema = {
     _id: "",
     amount: 0,
-    accountId: "",
+    recipientAccountId: "",
+    payerAccountId: "",
     createdAt: new Date(),
     paidAt: new Date(),
 }
