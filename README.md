@@ -10,19 +10,18 @@ There are many reasons to use the Mini-Bank repository. The most common use case
 
 However, the based application may lack of basic features, feel free to file an issue and submit a PR to enhance the base of mini-bank.
 
-## Authorization
+## Requests
 
-All API requests should require the use of a generated API key (todo). 
+### Example 
 
 ```http
-GET /api/<resource>/<id>/?api_key=12345678901234567890123456789012
+GET /api/<resource>/<id>
 ```
 
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `resource` | `string` | **Required**. Possible value: `account`, `invoice` |
-| `id` | `string` | **Required**. Your Mini-Bank API key |
-| `api_key` | `string` | **Required**. Your Mini-Bank API key |
+| `id` | `string` | **Required**. Resource id |
 
 ## Responses
 
