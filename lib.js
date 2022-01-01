@@ -12,8 +12,8 @@ async function deposit(connection, accountId, amount) {
     try {
         await connection.execute('SELECT id, name FROM accounts WHERE id = ? FOR UPDATE', [accountId]);
         console.log(`Locked rows for accounts: ${accountId}`);
-        const [account,] = await connection.execute('SELECT name, balance from accounts WHERE id = ?', [accountId]);
-        const result = await connection.execute('UPDATE accounts SET balance=balance+? WHERE id = ?', [amount, accountId]);
+        const [[account,],] = await connection.execute('SELECT id, name, balance from accounts WHERE id = ?', [accountId]);
+        const result = await connection.execute('UPDATE accounts SET balance=balance+? WHERE id = ?', [amount, account.id]);
         console.log(`Account balance updated`);
         await connection.commit();
         return result;
@@ -56,11 +56,11 @@ async function withdraw(connection, accountId, amount) {
     try {
         await connection.execute('SELECT id, name FROM accounts WHERE id = ? FOR UPDATE', [accountId]);
         console.log(`Locked rows for accounts: ${accountId}`);
-        const [[account,],] = await connection.execute('SELECT name, balance from accounts WHERE id = ?', [accountId]);
+        const [[account,],] = await connection.execute('SELECT id, name, balance from accounts WHERE id = ?', [accountId]);
         if (account.balance < amount) {
             throw new Error(`Account ${accountId} doesn't have enough fund`);
         }
-        const result = await connection.execute('UPDATE accounts SET balance=balance-? WHERE id = ?', [amount, accountId]);
+        const result = await connection.execute('UPDATE accounts SET balance=balance-? WHERE id = ?', [amount, account.id]);
         console.log(`Account balance updated`);
         await connection.commit();
         return result;
