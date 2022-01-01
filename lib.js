@@ -18,7 +18,7 @@ async function deposit(connection, accountId, amount) {
         await connection.commit();
         return result;
     } catch (err) {
-        console.error(`Error occurred while withdrawing: ${err.message}`, err);
+        console.error(`Error occurred while making a deposit: ${err.message}`, err);
         connection.rollback();
         console.info('Rollback successful');
         return {isError: true, err};
@@ -36,7 +36,7 @@ async function getAccount(connection, accountId) {
         const [result, ] = await connection.query('SELECT * FROM accounts WHERE id = ?', [accountId]);
         return result;
     } catch (err) {
-        console.error(`Error occurred while transferring: ${err.message}`, err);
+        console.error(`Error occurred while retrieving account: ${err.message}`, err);
         console.info('Rollback successful');
         return err;
     }
@@ -157,7 +157,7 @@ async function createInvoice(connection, recipientAccountId, amount) {
         const [result, ] = await connection.execute(`INSERT INTO invoices (recipient_account_id, amount) VALUES (?, ?)`, [recipientAccountId, amount]);
         return result;
     } catch (err) {
-        console.error(`Error occurred while creating account: ${err.message}`, err);
+        console.error(`Error occurred while creating invoice: ${err.message}`, err);
         return {isError: true, err};
     }
 }
@@ -184,7 +184,7 @@ async function payInvoice(connection, invoiceId, payerAccountId) {
         await connection.commit();
         return result;
     } catch (err) {
-        console.error(`Error occurred while transferring: ${err.message}`, err);
+        console.error(`Error occurred while making a payment to invoice: ${err.message}`, err);
         connection.rollback();
         console.info('Rollback successful');
         return {isError: true, err};
@@ -196,7 +196,7 @@ async function getInvoice(connection, invoiceId) {
         const [result, ] = await connection.query('SELECT * FROM invoices WHERE id = ?', [invoiceId]);
         return result;
     } catch (err) {
-        console.error(`Error occurred while transferring: ${err.message}`, err);
+        console.error(`Error occurred while retrieving invoice: ${err.message}`, err);
         console.info('Rollback successful');
         return {isError: true, err};
     }
