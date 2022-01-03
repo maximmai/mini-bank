@@ -15,7 +15,7 @@ However, the based application may lack of basic features, feel free to file an 
 - Node v14+
 
 ### Database initialization
-Once a database is provisioned, run the following script to create the base tables, https://github.com/maximmai/mini-bank/blob/main/database/mini_bank.sql
+Once a database is provisioned, run the following script to create the base tables, https://github.com/maximmai/mini-bank/blob/main/schema/mini_bank.sql
 
 ### Environment
 Create a `.env` file that contains the database connection information:
