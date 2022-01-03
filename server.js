@@ -9,7 +9,7 @@ const {
     handlerCreateInvoice,
     handlerPayInvoice,
     handlerGetInvoice
-} = require('./handlers');
+} = require('./controllers/handlers');
 
 const API_PORT = 3000;
 const API_PREFIX = '/api';

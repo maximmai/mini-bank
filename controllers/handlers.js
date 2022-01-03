@@ -1,4 +1,4 @@
-const {createDBConnection, wrapResponse} = require("./database/utils");
+const {createDBConnection, wrapResponse} = require("../libs/utils");
 
 const {
     createAccount,
@@ -9,7 +9,7 @@ const {
     createInvoice,
     payInvoice,
     getInvoice
-} = require("./lib");
+} = require("./actions");
 
 const handlerCreateAccount = async (req, res) => {
     const connection = await createDBConnection();

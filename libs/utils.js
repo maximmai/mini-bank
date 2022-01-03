@@ -1,7 +1,7 @@
 const mysql = require("mysql2/promise");
 
 /**
- * Make a database connection. The variable can be configured in `.env` under the root folder.
+ * Make a models connection. The variable can be configured in `.env` under the root folder.
  * @returns {Promise<*>}
  */
 async function createDBConnection(){
